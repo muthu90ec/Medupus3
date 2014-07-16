@@ -74,5 +74,5 @@ public class Main extends Activity{
 	
 
 	}
-}
+}//main class
 	
