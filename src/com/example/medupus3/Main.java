@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -16,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -24,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -302,12 +305,13 @@ public class Main extends Activity  {
     private class MyAsyncTask extends AsyncTask<Void, Void, Void>
 {
         //ProgressDialog mProgressDialog;
-    	String test;
+    	String test,u,p;
         @Override
         
         protected void onPostExecute(Void result) {
             //mProgressDialog.dismiss();
-        	etUser.setText(test);
+        	etUser.setText(u);
+        	etPass.setText(p);
         	
         }
 
@@ -355,43 +359,66 @@ public class Main extends Activity  {
                     entity = response.getEntity();
                     String responseBody = EntityUtils.toString(response.getEntity());
                     test=responseBody;
+                    ////Log.d("myApp", "no network");
+                    ///u="notworking";
+                   JSONObject obj = new JSONObject(responseBody);
+                   JSONArray data = obj.getJSONArray("products");
+                    for(int i=0;i<data.length();i++){
+                    JSONObject eachData = data.getJSONObject(i);
+                      u=eachData.getString("mail");
+                      p=eachData.getString("class");
+                    }
+                    
+                    //u="hello";
+                    //p="world";
+                    //JSONArray root = new JSONArray(responseBody);
+                    //int x=root.length();
+                    //u=responseBody;
+                    //JSONArray sessions = root.getJSONArray("root");
+                    //for(int i=0;i<root.length();i++){
+                    	//HashMap<String,String> map2 = new HashMap<String, String>();
+                    	//JSONObject e =root.getJSONObject(i);
+                    	//u=e.getString("mail");
+                    	//p=e.getString("class");
+                    //}
 
                     //check if entity is not null
-                    if(entity != null){
+                    /*if(entity != null){
 
 
                         //Create new input stream with received data assigned
                         InputStream instream = entity.getContent();
 
                         //Create new JSON Object. assign converted data as parameter.
-                        JSONObject jsonResponse = new JSONObject(responseBody/*convertStreamToString(instream)*/);
+                        JSONObject jsonResponse = new JSONObject(responseBody/*convertStreamToString(instream)*///);
 
                         //assign json responses to local strings
-                        String retUser = jsonResponse.getString("mail");//mySQL table field
-                        String retPass = jsonResponse.getString("class");
+                       // String retUser = jsonResponse.getString("mail");//mySQL table field
+                       // String retPass = jsonResponse.getString("class");
                         //test=responseBody;
                         //Validate login
-                        if(username.equals(retUser)&& password.equals(retPass)){ //Check whether 'retUser' and 'retPass' matches username/password 
+                       // if(username.equals(retUser)&& password.equals(retPass)){ //Check whether 'retUser' and 'retPass' matches username/password 
 
                             //Display a Toast saying login was a success
                             //Toast.makeText(getBaseContext(), "Successful", Toast.LENGTH_SHORT).show();
 
 
-                        } else {
+                        //} else {
                             //Display a Toast saying it failed.
 
                             //Toast.makeText(getBaseContext(), "Invalid Login Details", Toast.LENGTH_SHORT).show();
-                        }
+                       // }
 
-                    }
+                    //}*/
 
 
                 }
 
 
             } catch(Exception e){
+            	//u="working";
 
-               e.printStackTrace();
+            	Log.e("log_txt", "Error parsing data " + e.toString());
                 //Display toast when there is a connection error
                 //Change message to something more friendly
               // Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
