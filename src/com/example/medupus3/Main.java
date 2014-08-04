@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
@@ -32,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Main extends Activity  {
@@ -42,6 +44,7 @@ public class Main extends Activity  {
 
     //Create string variables that will have the input assigned to them
     String username, password,s;
+    static String first_name, last_name;
 
     //Create a HTTPClient as the form container
     HttpClient httpclient;
@@ -55,7 +58,7 @@ public class Main extends Activity  {
     //Create a HTTP Response and HTTP Entity
     HttpResponse response;
     HttpEntity entity;
-
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class Main extends Activity  {
         etUser = (EditText) findViewById(R.id.userName);
         etPass = (EditText) findViewById(R.id.passWord);
         bLogin = (Button) findViewById(R.id.bSubmit);
+        
         //Now to set an onClickListener
         //bLogin.setOnClickListener(this);
         bLogin.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +142,7 @@ public class Main extends Activity  {
         	etPass.setText("");
         	if(num==1){
         		Toast.makeText(getBaseContext(), "Successful", Toast.LENGTH_SHORT).show();
+        		homePageExecute();
         	}
         	else{
         		Toast.makeText(getBaseContext(), "Invalid Login Details", Toast.LENGTH_SHORT).show();
@@ -198,6 +203,8 @@ public class Main extends Activity  {
                    JSONArray data = obj.getJSONArray("products");
                     for(int i=0;i<data.length();i++){
                     JSONObject eachData = data.getJSONObject(i);
+                      first_name=eachData.getString("name");
+                      last_name=eachData.getString("namelast");
                       u=eachData.getString("mail");
                       p=eachData.getString("class");
                     }
@@ -217,5 +224,14 @@ public class Main extends Activity  {
            return null;
         }
     }
+
+
+
+	public void homePageExecute() {
+		// TODO Auto-generated method stub
+		Intent i = new Intent(getApplicationContext(), Homepage.class);
+		startActivity(i);
+		
+	}
 }
 	
